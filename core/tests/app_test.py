@@ -57,7 +57,7 @@ class TestCaseDupeGuru:
         # for this unit is pathetic. What's done is done. My approach now is to add tests for
         # every change I want to make. The blowup was caused by a missing import.
         p = Path(str(tmpdir))
-        io.open(p + 'foo', 'w').close()
+        io.open(p['foo'], 'w').close()
         monkeypatch.setattr(hscommon.conflict, 'smart_copy', log_calls(lambda source_path, dest_path: None))
         # XXX This monkeypatch is temporary. will be fixed in a better monkeypatcher.
         monkeypatch.setattr(app, 'smart_copy', hscommon.conflict.smart_copy)
@@ -73,14 +73,14 @@ class TestCaseDupeGuru:
     
     def test_copy_or_move_clean_empty_dirs(self, tmpdir, monkeypatch):
         tmppath = Path(str(tmpdir))
-        sourcepath = tmppath + 'source'
+        sourcepath = tmppath['source']
         io.mkdir(sourcepath)
-        io.open(sourcepath + 'myfile', 'w')
+        io.open(sourcepath['myfile'], 'w')
         app = TestApp().app
         app.directories.add_path(tmppath)
         [myfile] = app.directories.get_files()
         monkeypatch.setattr(app, 'clean_empty_dirs', log_calls(lambda path: None))
-        app.copy_or_move(myfile, False, tmppath + 'dest', 0)
+        app.copy_or_move(myfile, False, tmppath['dest'], 0)
         calls = app.clean_empty_dirs.calls
         eq_(1, len(calls))
         eq_(sourcepath, calls[0]['path'])
@@ -104,8 +104,8 @@ class TestCaseDupeGuru:
         # If the ignore_hardlink_matches option is set, don't match files hardlinking to the same
         # inode.
         tmppath = Path(str(tmpdir))
-        io.open(tmppath + 'myfile', 'w').write('foo')
-        os.link(str(tmppath + 'myfile'), str(tmppath + 'hardlink'))
+        io.open(tmppath['myfile'], 'w').write('foo')
+        os.link(str(tmppath['myfile']), str(tmppath['hardlink']))
         app = TestApp().app
         app.directories.add_path(tmppath)
         app.scanner.scan_type = ScanType.Contents
@@ -171,8 +171,8 @@ class TestCaseDupeGuruWithResults:
         self.rtable.refresh()
         tmpdir = request.getfuncargvalue('tmpdir')
         tmppath = Path(str(tmpdir))
-        io.mkdir(tmppath + 'foo')
-        io.mkdir(tmppath + 'bar')
+        io.mkdir(tmppath['foo'])
+        io.mkdir(tmppath['bar'])
         self.app.directories.add_path(tmppath)
     
     def test_GetObjects(self, do_setup):
@@ -404,11 +404,11 @@ class TestCaseDupeGuru_renameSelected:
     def pytest_funcarg__do_setup(self, request):
         tmpdir = request.getfuncargvalue('tmpdir')
         p = Path(str(tmpdir))
-        fp = open(str(p + 'foo bar 1'),mode='w')
+        fp = open(str(p['foo bar 1']),mode='w')
         fp.close()
-        fp = open(str(p + 'foo bar 2'),mode='w')
+        fp = open(str(p['foo bar 2']),mode='w')
         fp.close()
-        fp = open(str(p + 'foo bar 3'),mode='w')
+        fp = open(str(p['foo bar 3']),mode='w')
         fp.close()
         files = fs.get_files(p)
         for f in files:
@@ -467,9 +467,9 @@ class TestAppWithDirectoriesInTree:
     def pytest_funcarg__do_setup(self, request):
         tmpdir = request.getfuncargvalue('tmpdir')
         p = Path(str(tmpdir))
-        io.mkdir(p + 'sub1')
-        io.mkdir(p + 'sub2')
-        io.mkdir(p + 'sub3')
+        io.mkdir(p['sub1'])
+        io.mkdir(p['sub2'])
+        io.mkdir(p['sub3'])
         app = TestApp()
         self.app = app.app
         self.dtree = app.dtree

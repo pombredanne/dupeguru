@@ -150,7 +150,7 @@ class File:
     def rename(self, newname):
         if newname == self.name:
             return
-        destpath = self.path.parent() + newname
+        destpath = self.path.parent()[newname]
         if destpath.exists():
             raise AlreadyExistsError(newname, self.path.parent())
         try:
@@ -219,7 +219,7 @@ class Folder(File):
     @property
     def subfolders(self):
         if self._subfolders is None:
-            subpaths = [self.path + name for name in self.path.listdir()]
+            subpaths = [self.path[name] for name in self.path.listdir()]
             subfolders = [p for p in subpaths if not p.islink() and p.isdir()]
             self._subfolders = [self.__class__(p) for p in subfolders]
         return self._subfolders
@@ -250,7 +250,7 @@ def get_files(path, fileclasses=[File]):
     assert all(issubclass(fileclass, File) for fileclass in fileclasses)
     def combine_paths(p1, p2):
         try:
-            return p1 + p2
+            return p1[p2]
         except Exception:
             # This is temporary debug logging for #84.
             logging.warning("Failed to combine %r and %r.", p1, p2)

@@ -94,11 +94,10 @@ class Path(tuple):
                 stop = -len(equal_elems) if equal_elems else None
                 key = slice(key.start, stop, key.step)
             return Path(tuple.__getitem__(self, key))
+        elif isinstance(key, (str, Path)):
+            return self + key
         else:
             return tuple.__getitem__(self, key)
-    
-    def __getslice__(self, i, j): #I have to override it because tuple uses it.
-        return Path(tuple.__getslice__(self, i, j))
     
     def __hash__(self):
         return tuple.__hash__(self)

@@ -100,7 +100,7 @@ class NamedObject:
     
     @property
     def path(self):
-        return self._folder + self.name
+        return self._folder[self.name]
     
     @property
     def folder_path(self):

@@ -21,7 +21,7 @@ class NamedObject:
         if path is None:
             path = Path(name)
         else:
-            path = Path(path) + name
+            path = Path(path)[name]
         self.name = name
         self.size = size
         self.path = path
@@ -471,8 +471,8 @@ def test_dont_group_files_that_dont_exist(tmpdir):
     s = Scanner()
     s.scan_type = ScanType.Contents
     p = Path(str(tmpdir))
-    io.open(p + 'file1', 'w').write('foo')
-    io.open(p + 'file2', 'w').write('foo')
+    io.open(p['file1'], 'w').write('foo')
+    io.open(p['file2'], 'w').write('foo')
     file1, file2 = fs.get_files(p)
     def getmatches(*args, **kw):
         io.remove(file2.path)

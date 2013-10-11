@@ -383,11 +383,11 @@ class DupeGuru(RegistrableApplication, Broadcaster):
             source_base = source_path.remove_drive_letter().parent()
             if dest_type == DestType.Relative:
                 source_base = source_base[location_path:]
-            dest_path = dest_path + source_base
+            dest_path = dest_path[source_base]
         if not dest_path.exists():
             dest_path.makedirs()
         # Add filename to dest_path. For file move/copy, it's not required, but for folders, yes.
-        dest_path = dest_path + source_path[-1]
+        dest_path = dest_path[source_path[-1]]
         logging.debug("Copy/Move operation from '%s' to '%s'", source_path, dest_path)
         # Raises an EnvironmentError if there's a problem
         if copy:

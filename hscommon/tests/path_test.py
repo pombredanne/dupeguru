@@ -186,6 +186,16 @@ def test_Path_of_a_Path_returns_self(force_ossep):
     p = Path('foo/bar')
     assert Path(p) is p
 
+def test_getitem_str(force_ossep):
+    # path['something'] returns the child path corresponding to the name
+    p = Path('/foo/bar')
+    eq_(p['baz'], Path('/foo/bar/baz'))
+
+def test_getitem_path(force_ossep):
+    # path[Path('something')] returns the child path corresponding to the name (or subpath)
+    p = Path('/foo/bar')
+    eq_(p[Path('baz/bleh')], Path('/foo/bar/baz/bleh'))
+
 @mark.xfail(reason="pytest's capture mechanism is flaky, I have to investigate")
 def test_log_unicode_errors(force_ossep, monkeypatch, capsys):
     # When an there's a UnicodeDecodeError on path creation, log it so it can be possible
