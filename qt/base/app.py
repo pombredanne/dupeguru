@@ -188,7 +188,7 @@ class DupeGuru(QObject):
     
     @staticmethod
     def reveal_path(path):
-        DupeGuru.open_path(path[:-1])
+        DupeGuru.open_path(path.parent())
     
     def get_default(self, key):
         return self.prefs.get_value(key)

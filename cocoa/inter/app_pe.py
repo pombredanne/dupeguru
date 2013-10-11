@@ -114,12 +114,12 @@ class Directories(directories.Directories):
         directories.Directories.__init__(self, fileclasses=[Photo])
         try:
             self.iphoto_libpath = get_iphoto_database_path()
-            self.set_state(self.iphoto_libpath[:-1], directories.DirectoryState.Excluded)
+            self.set_state(self.iphoto_libpath.parent(), directories.DirectoryState.Excluded)
         except directories.InvalidPathError:
             self.iphoto_libpath = None
         try:
             self.aperture_libpath = get_aperture_database_path()
-            self.set_state(self.aperture_libpath[:-1], directories.DirectoryState.Excluded)
+            self.set_state(self.aperture_libpath.parent(), directories.DirectoryState.Excluded)
         except directories.InvalidPathError:
             self.aperture_libpath = None
     
@@ -247,12 +247,12 @@ class DupeGuruPE(DupeGuruBase):
             DupeGuruBase._do_delete_dupe(self, dupe, *args)
     
     def _create_file(self, path):
-        if (self.directories.iphoto_libpath is not None) and (path in self.directories.iphoto_libpath[:-1]):
+        if (self.directories.iphoto_libpath is not None) and (path in self.directories.iphoto_libpath.parent()):
             if not hasattr(self, 'path2iphoto'):
                 photos = get_iphoto_pictures(self.directories.iphoto_libpath)
                 self.path2iphoto = {p.path: p for p in photos}
             return self.path2iphoto.get(path)
-        if (self.directories.aperture_libpath is not None) and (path in self.directories.aperture_libpath[:-1]):
+        if (self.directories.aperture_libpath is not None) and (path in self.directories.aperture_libpath.parent()):
             if not hasattr(self, 'path2aperture'):
                 photos = get_aperture_pictures(self.directories.aperture_libpath)
                 self.path2aperture = {p.path: p for p in photos}

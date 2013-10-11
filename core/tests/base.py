@@ -104,7 +104,7 @@ class NamedObject:
     
     @property
     def folder_path(self):
-        return self.path[:-1]
+        return self.path.parent()
     
     @property
     def extension(self):

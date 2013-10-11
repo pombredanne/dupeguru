@@ -72,7 +72,7 @@ def test_add_path():
     eq_(1,len(d))
     assert p in d
     assert (p + 'foobar') in d
-    assert p[:-1] not in d
+    assert p.parent() not in d
     p = testpath + 'fs'
     d.add_path(p)
     eq_(2,len(d))
@@ -171,7 +171,7 @@ def test_get_files():
     files = list(d.get_files())
     eq_(5, len(files))
     for f in files:
-        if f.path[:-1] == p + 'dir1':
+        if f.path.parent() == p + 'dir1':
             assert f.is_ref
         else:
             assert not f.is_ref

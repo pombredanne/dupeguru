@@ -63,6 +63,12 @@ def test_slicing(force_ossep):
     eq_('foo/bar',subpath)
     assert isinstance(subpath,Path)
 
+def test_parent(force_ossep):
+    path = Path('foo/bar/bleh')
+    subpath = path.parent()
+    eq_('foo/bar', subpath)
+    assert isinstance(subpath, Path)
+
 def test_deal_with_empty_components(force_ossep):
     """Keep ONLY a leading space, which means we want a leading slash.
     """

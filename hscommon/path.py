@@ -133,6 +133,9 @@ class Path(tuple):
     def tobytes(self):
         return str(self).encode(sys.getfilesystemencoding())
     
+    def parent(self):
+        return self[:-1]
+    
     # OS method wrappers
     def exists(self):
         return op.exists(str(self))

@@ -44,7 +44,7 @@ def _smart_move_or_copy(operation, source_path, dest_path):
         dest_path = dest_path + source_path[-1]
     if io.exists(dest_path):
         filename = dest_path[-1]
-        dest_dir_path = dest_path[:-1]
+        dest_dir_path = dest_path.parent()
         newname = get_conflicted_name(io.listdir(dest_dir_path), filename)
         dest_path = dest_dir_path + newname
     operation(source_path, dest_path)

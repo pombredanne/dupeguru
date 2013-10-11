@@ -150,9 +150,9 @@ class File:
     def rename(self, newname):
         if newname == self.name:
             return
-        destpath = self.path[:-1] + newname
+        destpath = self.path.parent() + newname
         if destpath.exists():
-            raise AlreadyExistsError(newname, self.path[:-1])
+            raise AlreadyExistsError(newname, self.path.parent())
         try:
             self.path.rename(destpath)
         except EnvironmentError:
@@ -177,7 +177,7 @@ class File:
     
     @property
     def folder_path(self):
-        return self.path[:-1]
+        return self.path.parent()
     
 
 class Folder(File):

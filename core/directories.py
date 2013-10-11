@@ -178,7 +178,7 @@ class Directories:
         default_state = self._default_state_for_path(path)
         if default_state is not None:
             return default_state
-        parent = path[:-1]
+        parent = path.parent()
         if parent in self:
             return self.get_state(parent)
         else:
