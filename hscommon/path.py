@@ -135,6 +135,10 @@ class Path(tuple):
     def parent(self):
         return self[:-1]
     
+    @property
+    def name(self):
+        return self[-1]
+    
     # OS method wrappers
     def exists(self):
         return op.exists(str(self))

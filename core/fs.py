@@ -173,7 +173,7 @@ class File:
     
     @property
     def name(self):
-        return self.path[-1]
+        return self.path.name
     
     @property
     def folder_path(self):

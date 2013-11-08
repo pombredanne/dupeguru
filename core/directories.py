@@ -73,7 +73,7 @@ class Directories:
     #---Private
     def _default_state_for_path(self, path):
         # Override this in subclasses to specify the state of some special folders.
-        if path[-1].startswith('.'): # hidden
+        if path.name.startswith('.'): # hidden
             return DirectoryState.Excluded
     
     def _get_files(self, from_path, j):

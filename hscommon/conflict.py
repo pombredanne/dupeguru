@@ -41,12 +41,12 @@ def _smart_move_or_copy(operation, source_path, dest_path):
         slowness of the fs system.
     '''
     if io.isdir(dest_path) and not io.isdir(source_path):
-        dest_path = dest_path + source_path[-1]
+        dest_path = dest_path[source_path.name]
     if io.exists(dest_path):
-        filename = dest_path[-1]
+        filename = dest_path.name
         dest_dir_path = dest_path.parent()
         newname = get_conflicted_name(io.listdir(dest_dir_path), filename)
-        dest_path = dest_dir_path + newname
+        dest_path = dest_dir_path[newname]
     operation(source_path, dest_path)
     
 def smart_move(source_path, dest_path):

@@ -390,7 +390,7 @@ class DupeGuru(RegistrableApplication, Broadcaster):
         if not dest_path.exists():
             dest_path.makedirs()
         # Add filename to dest_path. For file move/copy, it's not required, but for folders, yes.
-        dest_path = dest_path[source_path[-1]]
+        dest_path = dest_path[source_path.name]
         logging.debug("Copy/Move operation from '%s' to '%s'", source_path, dest_path)
         # Raises an EnvironmentError if there's a problem
         if copy:
