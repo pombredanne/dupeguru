@@ -431,7 +431,7 @@ class TestCaseDupeGuru_renameSelected:
         g = self.groups[0]
         self.rtable.select([1])
         assert app.rename_selected('renamed')
-        names = io.listdir(self.p)
+        names = [p.name for p in self.p.listdir()]
         assert 'renamed' in names
         assert 'foo bar 2' not in names
         eq_(g.dupes[0].name, 'renamed')
@@ -444,7 +444,7 @@ class TestCaseDupeGuru_renameSelected:
         assert not app.rename_selected('renamed')
         msg = logging.warning.calls[0]['msg']
         eq_('dupeGuru Warning: list index out of range', msg)
-        names = io.listdir(self.p)
+        names = [p.name for p in self.p.listdir()]
         assert 'renamed' not in names
         assert 'foo bar 2' in names
         eq_(g.dupes[0].name, 'foo bar 2')
@@ -457,7 +457,7 @@ class TestCaseDupeGuru_renameSelected:
         assert not app.rename_selected('foo bar 1')
         msg = logging.warning.calls[0]['msg']
         assert msg.startswith('dupeGuru Warning: \'foo bar 1\' already exists in')
-        names = io.listdir(self.p)
+        names = [p.name for p in self.p.listdir()]
         assert 'foo bar 1' in names
         assert 'foo bar 2' in names
         eq_(g.dupes[0].name, 'foo bar 2')

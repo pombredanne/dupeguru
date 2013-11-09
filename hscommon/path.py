@@ -159,7 +159,7 @@ class Path(tuple):
         return op.islink(str(self))
 
     def listdir(self):
-        return os.listdir(str(self))
+        return [self[name] for name in os.listdir(str(self))]
 
     def mkdir(self, *args, **kwargs):
         return os.mkdir(str(self), *args, **kwargs)

@@ -7,6 +7,7 @@
 # http://www.hardcoded.net/licenses/bsd_license
 
 import re
+import os
 from . import io
 
 #This matches [123], but not [12] (3 digits being the minimum).
@@ -45,7 +46,7 @@ def _smart_move_or_copy(operation, source_path, dest_path):
     if io.exists(dest_path):
         filename = dest_path.name
         dest_dir_path = dest_path.parent()
-        newname = get_conflicted_name(io.listdir(dest_dir_path), filename)
+        newname = get_conflicted_name(os.listdir(str(dest_dir_path)), filename)
         dest_path = dest_dir_path[newname]
     operation(source_path, dest_path)
     
