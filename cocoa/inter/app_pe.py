@@ -13,9 +13,8 @@ import re
 
 from appscript import app, its, k, CommandError, ApplicationNotFoundError
 
-from hscommon import io
 from hscommon.util import remove_invalid_xml, first
-from hscommon.path import Path
+from hscommon.path import Path, pathify
 from hscommon.trans import trget
 from cocoa import proxy
 
@@ -67,11 +66,12 @@ class AperturePhoto(Photo):
     def display_folder_path(self):
         return APERTURE_PATH
 
-def get_iphoto_or_aperture_pictures(plistpath, photo_class):
+@pathify
+def get_iphoto_or_aperture_pictures(plistpath: Path, photo_class):
     # The structure of iPhoto and Aperture libraries for the base photo list are excactly the same.
-    if not io.exists(plistpath):
+    if not plistpath.exists():
         return []
-    s = io.open(plistpath, 'rt', encoding='utf-8').read()
+    s = plistpath.open('rt', encoding='utf-8').read()
     # There was a case where a guy had 0x10 chars in his plist, causing expat errors on loading
     s = remove_invalid_xml(s, replace_with='')
     # It seems that iPhoto sometimes doesn't properly escape & chars. The regexp below is to find

@@ -7,10 +7,11 @@
 # http://www.hardcoded.net/licenses/bsd_license
 
 import sys
+import os
 
 from pytest import raises, mark
 
-from ..path import *
+from ..path import Path, pathify
 from ..testutil import eq_
 
 def pytest_funcarg__force_ossep(request):
@@ -44,7 +45,7 @@ def test_init_with_tuple_and_list(force_ossep):
 def test_init_with_invalid_value(force_ossep):
     try:
         path = Path(42)
-        self.fail()
+        assert False
     except TypeError:
         pass
 
@@ -109,7 +110,7 @@ def test_add(force_ossep):
     #Invalid concatenation
     try:
         Path(('foo','bar')) + 1
-        self.fail()
+        assert False
     except TypeError:
         pass
 
@@ -227,3 +228,15 @@ def test_remove_drive_letter(monkeypatch):
     eq_(p.remove_drive_letter(), Path(''))
     p = Path('z:\\foo')
     eq_(p.remove_drive_letter(), Path('foo'))
+
+def test_pathify():
+    @pathify
+    def foo(a: Path, b, c:Path):
+        return a, b, c
+    
+    a, b, c = foo('foo', 0, c=Path('bar'))
+    assert isinstance(a, Path)
+    assert a == Path('foo')
+    assert b == 0
+    assert isinstance(c, Path)
+    assert c == Path('bar')

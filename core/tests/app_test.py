@@ -11,7 +11,6 @@ import os.path as op
 import logging
 
 from pytest import mark
-from hscommon import io
 from hscommon.path import Path
 import hscommon.conflict
 import hscommon.util
@@ -57,7 +56,7 @@ class TestCaseDupeGuru:
         # for this unit is pathetic. What's done is done. My approach now is to add tests for
         # every change I want to make. The blowup was caused by a missing import.
         p = Path(str(tmpdir))
-        io.open(p['foo'], 'w').close()
+        p['foo'].open('w').close()
         monkeypatch.setattr(hscommon.conflict, 'smart_copy', log_calls(lambda source_path, dest_path: None))
         # XXX This monkeypatch is temporary. will be fixed in a better monkeypatcher.
         monkeypatch.setattr(app, 'smart_copy', hscommon.conflict.smart_copy)
@@ -74,8 +73,8 @@ class TestCaseDupeGuru:
     def test_copy_or_move_clean_empty_dirs(self, tmpdir, monkeypatch):
         tmppath = Path(str(tmpdir))
         sourcepath = tmppath['source']
-        io.mkdir(sourcepath)
-        io.open(sourcepath['myfile'], 'w')
+        sourcepath.mkdir()
+        sourcepath['myfile'].open('w')
         app = TestApp().app
         app.directories.add_path(tmppath)
         [myfile] = app.directories.get_files()
@@ -104,7 +103,7 @@ class TestCaseDupeGuru:
         # If the ignore_hardlink_matches option is set, don't match files hardlinking to the same
         # inode.
         tmppath = Path(str(tmpdir))
-        io.open(tmppath['myfile'], 'w').write('foo')
+        tmppath['myfile'].open('w').write('foo')
         os.link(str(tmppath['myfile']), str(tmppath['hardlink']))
         app = TestApp().app
         app.directories.add_path(tmppath)
@@ -171,8 +170,8 @@ class TestCaseDupeGuruWithResults:
         self.rtable.refresh()
         tmpdir = request.getfuncargvalue('tmpdir')
         tmppath = Path(str(tmpdir))
-        io.mkdir(tmppath['foo'])
-        io.mkdir(tmppath['bar'])
+        tmppath['foo'].mkdir()
+        tmppath['bar'].mkdir()
         self.app.directories.add_path(tmppath)
     
     def test_GetObjects(self, do_setup):
@@ -467,9 +466,9 @@ class TestAppWithDirectoriesInTree:
     def pytest_funcarg__do_setup(self, request):
         tmpdir = request.getfuncargvalue('tmpdir')
         p = Path(str(tmpdir))
-        io.mkdir(p['sub1'])
-        io.mkdir(p['sub2'])
-        io.mkdir(p['sub3'])
+        p['sub1'].mkdir()
+        p['sub2'].mkdir()
+        p['sub3'].mkdir()
         app = TestApp()
         self.app = app.app
         self.dtree = app.dtree

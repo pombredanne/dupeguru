@@ -12,7 +12,6 @@ import tempfile
 import shutil
 
 from pytest import raises
-from hscommon import io
 from hscommon.path import Path
 from hscommon.testutil import eq_
 
@@ -21,26 +20,26 @@ from ..directories import *
 def create_fake_fs(rootpath):
     # We have it as a separate function because other units are using it.
     rootpath = rootpath['fs']
-    io.mkdir(rootpath)
-    io.mkdir(rootpath['dir1'])
-    io.mkdir(rootpath['dir2'])
-    io.mkdir(rootpath['dir3'])
-    fp = io.open(rootpath['file1.test'], 'w')
+    rootpath.mkdir()
+    rootpath['dir1'].mkdir()
+    rootpath['dir2'].mkdir()
+    rootpath['dir3'].mkdir()
+    fp = rootpath['file1.test'].open('w')
     fp.write('1')
     fp.close()
-    fp = io.open(rootpath['file2.test'], 'w')
+    fp = rootpath['file2.test'].open('w')
     fp.write('12')
     fp.close()
-    fp = io.open(rootpath['file3.test'], 'w')
+    fp = rootpath['file3.test'].open('w')
     fp.write('123')
     fp.close()
-    fp = io.open(rootpath['dir1']['file1.test'], 'w')
+    fp = rootpath['dir1']['file1.test'].open('w')
     fp.write('1')
     fp.close()
-    fp = io.open(rootpath['dir2']['file2.test'], 'w')
+    fp = rootpath['dir2']['file2.test'].open('w')
     fp.write('12')
     fp.close()
-    fp = io.open(rootpath['dir3']['file3.test'], 'w')
+    fp = rootpath['dir3']['file3.test'].open('w')
     fp.write('123')
     fp.close()
     return rootpath
@@ -51,8 +50,8 @@ def setup_module(module):
     testpath = Path(tempfile.mkdtemp())
     module.testpath = testpath
     rootpath = testpath['onefile']
-    io.mkdir(rootpath)
-    fp = io.open(rootpath['test.txt'], 'w')
+    rootpath.mkdir()
+    fp = rootpath['test.txt'].open('w')
     fp.write('test_data')
     fp.close()
     create_fake_fs(testpath)
@@ -202,9 +201,9 @@ def test_save_and_load(tmpdir):
     d1 = Directories()
     d2 = Directories()
     p1 = Path(str(tmpdir.join('p1')))
-    io.mkdir(p1)
+    p1.mkdir()
     p2 = Path(str(tmpdir.join('p2')))
-    io.mkdir(p2)
+    p2.mkdir()
     d1.add_path(p1)
     d1.add_path(p2)
     d1.set_state(p1, DirectoryState.Reference)
@@ -237,9 +236,9 @@ def test_load_from_file_with_invalid_path(tmpdir):
     d1.add_path(testpath['onefile'])
     #Will raise InvalidPath upon loading
     p = Path(str(tmpdir.join('toremove')))
-    io.mkdir(p)
+    p.mkdir()
     d1.add_path(p)
-    io.rmdir(p)
+    p.rmdir()
     tmpxml = str(tmpdir.join('directories_testunit.xml'))
     d1.save_to_file(tmpxml)
     d2 = Directories()
@@ -249,8 +248,8 @@ def test_load_from_file_with_invalid_path(tmpdir):
 def test_unicode_save(tmpdir):
     d = Directories()
     p1 = Path(str(tmpdir))['hello\xe9']
-    io.mkdir(p1)
-    io.mkdir(p1['foo\xe9'])
+    p1.mkdir()
+    p1['foo\xe9'].mkdir()
     d.add_path(p1)
     d.set_state(p1['foo\xe9'], DirectoryState.Excluded)
     tmpxml = str(tmpdir.join('directories_testunit.xml'))
@@ -274,14 +273,14 @@ def test_get_files_does_not_choke_on_non_existing_directories(tmpdir):
     d = Directories()
     p = Path(str(tmpdir))
     d.add_path(p)
-    io.rmtree(p)
+    p.rmtree()
     eq_([], list(d.get_files()))
 
 def test_get_state_returns_excluded_by_default_for_hidden_directories(tmpdir):
     d = Directories()
     p = Path(str(tmpdir))
     hidden_dir_path = p['.foo']
-    io.mkdir(p['.foo'])
+    p['.foo'].mkdir()
     d.add_path(p)
     eq_(d.get_state(hidden_dir_path), DirectoryState.Excluded)
     # But it can be overriden
@@ -297,10 +296,10 @@ def test_default_path_state_override(tmpdir):
     
     d = MyDirectories()
     p1 = Path(str(tmpdir))
-    io.mkdir(p1['foobar'])
-    io.open(p1['foobar/somefile'], 'w').close()
-    io.mkdir(p1['foobaz'])
-    io.open(p1['foobaz/somefile'], 'w').close()
+    p1['foobar'].mkdir()
+    p1['foobar/somefile'].open('w').close()
+    p1['foobaz'].mkdir()
+    p1['foobaz/somefile'].open('w').close()
     d.add_path(p1)
     eq_(d.get_state(p1['foobaz']), DirectoryState.Normal)
     eq_(d.get_state(p1['foobar']), DirectoryState.Excluded)
