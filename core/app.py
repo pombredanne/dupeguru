@@ -144,7 +144,7 @@ class DupeGuru(RegistrableApplication, Broadcaster):
             logging.debug("Debug mode enabled")
         RegistrableApplication.__init__(self, view, appid=1)
         Broadcaster.__init__(self)
-        self.appdata = desktop.special_folder_path(desktop.SpecialFolder.AppData)
+        self.appdata = desktop.special_folder_path(desktop.SpecialFolder.AppData, appname=self.NAME)
         if not op.exists(self.appdata):
             os.makedirs(self.appdata)
         self.directories = directories.Directories()
@@ -182,9 +182,9 @@ class DupeGuru(RegistrableApplication, Broadcaster):
             return self.results.is_marked(dupe)
         if key == 'percentage':
             m = get_group().get_match_of(dupe)
-            result = m.percentage
+            return m.percentage
         elif key == 'dupe_count':
-            result = 0
+            return 0
         else:
             result = cmp_value(dupe, key)
         if delta:
