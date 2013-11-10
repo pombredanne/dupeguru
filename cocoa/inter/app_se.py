@@ -25,8 +25,8 @@ def is_bundle(str_path):
     return proxy.type_conformsToType_(uti, 'com.apple.bundle') or proxy.type_conformsToType_(uti, 'com.apple.package')
 
 class Bundle(fs.Folder):
-    @pathify
     @classmethod
+    @pathify
     def can_handle(cls, path: Path):
         return not path.islink() and path.isdir() and is_bundle(str(path))
     
